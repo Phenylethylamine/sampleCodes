@@ -131,7 +131,7 @@ class st11_order_list extends st11
             # 이미 INSERT 되어있는 경우 발주확인만 하고 종료
             $sql_check = "
                 SELECT		COUNT(*)
-                FROM		auction_jangproduct AS AJ
+                FROM		(주문테이블) AS AJ
                 WHERE		AJ.coop_ordNo = '{$order['ordNo']}'
                 AND			AJ.coop_ordSeq = '{$order['ordPrdSeq']}'
                 AND			AJ.site = '11st'
@@ -181,7 +181,7 @@ class st11_order_list extends st11
             ++$time;
 
 
-            # (1) auction_jangproduct 입력 시작
+            # (1) (주문테이블) 입력 시작
             $JP = array();
             $JP['gou_number'] = $order_number;
             $JP['product_number'] = $order['sellerPrdCd'];
@@ -469,7 +469,7 @@ class st11_order_list extends st11
             if ($need_vacct_close) {
                 $sql_vact = "
 					SELECT		A.kcp_tno
-					FROM		auction_jangproduct AS A
+					FROM		(주문테이블) AS A
 					WHERE		A.product_number = '{$match_product['number']}'
 					AND			A.gou_number <> '{$order_number}'
 					AND			A.kcp_tno <> ''
@@ -637,7 +637,7 @@ class st11_order_list extends st11
 				SELECT		AJ.*,
 							APC.coop_number,
 							HM.user_hphone AS seller_hphone
-				FROM		auction_jangproduct AS AJ
+				FROM		(주문테이블) AS AJ
 				LEFT OUTER JOIN (제휴상품연동정보테이블) AS APC ON AJ.product_number = APC.product_number
 				LEFT OUTER JOIN (회원테이블) AS HM ON AJ.seller_id = HM.user_id
 				WHERE		AJ.coop_ordNo = '{$cancel['ordNo']}'
@@ -674,7 +674,7 @@ class st11_order_list extends st11
             if ($cancel['ordCnQty'] < $order['quantity']) {
                 # 클레임 대응 발송처리가 가능하도록 클레임번호 저장
                 $sql_update = "
-					UPDATE auction_jangproduct SET
+					UPDATE (주문테이블) SET
 						coop_clmNo = '{$cancel['ordPrdCnSeq']}'
 					WHERE number = {$order['number']}
 				";
@@ -766,7 +766,7 @@ class st11_order_list extends st11
 
 
             $sql_update = "
-				UPDATE auction_jangproduct SET
+				UPDATE (주문테이블) SET
 					product_stats = '7',
 					memo_cancel = '{$memo_cancel}',
 					coop_clmAct = 'Y',
@@ -879,7 +879,7 @@ class st11_order_list extends st11
 				SELECT		AJ.*,
 							APC.coop_number,
 							HM.user_hphone AS seller_hphone
-				FROM		auction_jangproduct AS AJ
+				FROM		(주문테이블) AS AJ
 				LEFT OUTER JOIN (제휴상품연동정보테이블) AS APC ON AJ.product_number = APC.product_number
 				LEFT OUTER JOIN (회원테이블) AS HM ON AJ.seller_id = HM.user_id
 				WHERE		AJ.coop_ordNo = '{$row['ordNo']}'
@@ -912,7 +912,7 @@ class st11_order_list extends st11
             # auction_jangproduct
             $memo_return = addslashes($row['clmReqCont']);
             $sql_update = "
-				UPDATE auction_jangproduct SET
+				UPDATE (주문테이블) SET
 					product_stats = '17',
 					memo_return = '{$memo_return}',
 					coop_clmAct = 'Y',
@@ -1041,7 +1041,7 @@ class st11_order_list extends st11
 				SELECT		AJ.*,
 							APC.coop_number,
 							HM.user_hphone AS seller_hphone
-				FROM		auction_jangproduct AS AJ
+				FROM		(주문테이블) AS AJ
 				LEFT OUTER JOIN (제휴상품연동정보테이블) AS APC ON AJ.product_number = APC.product_number
 				LEFT OUTER JOIN (회원테이블) AS HM ON AJ.seller_id = HM.user_id
 				WHERE		AJ.coop_ordNo = '{$row['ordNo']}'
@@ -1074,7 +1074,7 @@ class st11_order_list extends st11
             # auction_jangproduct
             $memo_return = addslashes($row['clmReqCont']);
             $sql_update = "
-				UPDATE auction_jangproduct SET
+				UPDATE (주문테이블) SET
 					product_stats = '8',
 					memo_return = '{$memo_return}',
 					coop_clmAct = 'Y',
@@ -1216,7 +1216,7 @@ class st11_order_list extends st11
 				SELECT		AJ.*,
 							APC.coop_number,
 							HM.user_hphone AS seller_hphone
-				FROM		auction_jangproduct AS AJ
+				FROM		(주문테이블) AS AJ
 				LEFT OUTER JOIN (제휴상품연동정보테이블) AS APC ON AJ.product_number = APC.product_number
 				LEFT OUTER JOIN (회원테이블) AS HM ON AJ.seller_id = HM.user_id
 				WHERE		AJ.coop_ordNo = '{$row['ordNo']}'
@@ -1247,7 +1247,7 @@ class st11_order_list extends st11
             # 논현점 판매건은 정산완료로 변경
             if ($order['seller_id'] == 'pricegolf') {
                 $sql_update = "
-                    UPDATE auction_jangproduct SET
+                    UPDATE (주문테이블) SET
                         product_stats = '6',
                         decision_date = '{$reg_date}',
                         jungsanhwakjung_date = '{$reg_date}',
@@ -1257,7 +1257,7 @@ class st11_order_list extends st11
                 $update_stats = 6;
             } else {
                 $sql_update = "
-                    UPDATE auction_jangproduct SET
+                    UPDATE (주문테이블) SET
                         product_stats = '5',
                         decision_date = '{$reg_date}',
                         ini_reg_status = '0'
@@ -1301,7 +1301,7 @@ class st11_order_list extends st11
                         ST.tracking_stats,
                         ST.complete_date,
                         ST.last_tracking_date
-            FROM        auction_jangproduct AJ
+            FROM        (주문테이블) AJ
             LEFT OUTER JOIN auction_jangproduct_sweettracker AS ST ON AJ.number = ST.jp_number
             WHERE       {$WHERE}
         ";

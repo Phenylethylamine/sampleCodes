@@ -20,7 +20,7 @@ class st11_order extends st11
         if (isset($this->order_data)) return $this->order_data;
         $sql = "
 			SELECT		*
-			FROM		auction_jangproduct AS A
+			FROM		(주문테이블) AS A
 			WHERE		A.number = '{$this->jangproduct_number}'
 		";
         list($this->order_data) = util::query_to_array($sql);
@@ -153,7 +153,7 @@ class st11_order extends st11
     }
 
     /**
-     * 발송처리 : auction_jangproduct 참조버전
+     * 발송처리 : (주문테이블) 참조버전
      */
     public function reqdelivery()
     {
